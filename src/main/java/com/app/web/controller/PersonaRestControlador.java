@@ -24,7 +24,7 @@ import com.app.web.entity.Persona;
 import com.app.web.service.PersonaServicio;
 
 @RestController
-@RequestMapping("/api_registro")
+@RequestMapping("/api")
 public class PersonaRestControlador {
 
     @Autowired
@@ -55,7 +55,7 @@ public class PersonaRestControlador {
         if (matcher.find()) {
             longDni = Long.parseLong(apellidoDni);
             List<Persona> list = personaServicio.TraerPersonasPorId(longDni);
-            if (list == null) {
+            if (list.isEmpty()) {
                 mensajeError.setMensaje("No existe ningun registro con ese numero de DNI");
                 return new ResponseEntity(mensajeError, HttpStatus.NOT_FOUND);
             }
@@ -75,7 +75,7 @@ public class PersonaRestControlador {
         if (!personaServicio.esUnSexoContemplado(sexo)) {
             return new ResponseEntity(new Mensaje("Solo se admite Femenino/Masculino/Otro"), HttpStatus.BAD_REQUEST);
         }
-        if (personaServicio.TraerPersonasPorId(dni) == null) {
+        if (personaServicio.TraerPersonasPorId(dni).isEmpty()) {
             return new ResponseEntity(new Mensaje("El recurso no existe"), HttpStatus.NOT_FOUND);
         }
 
