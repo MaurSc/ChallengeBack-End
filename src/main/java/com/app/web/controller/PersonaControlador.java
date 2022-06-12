@@ -60,12 +60,12 @@ public class PersonaControlador {
         
         if(matcher.find()){
             longDni = Long.parseLong(apellidoDni);
-            if (personaServicio.TraerPersonasPorId(longDni).isEmpty()){
+            if (personaServicio.traerPersonasPorId(longDni).isEmpty()){
                 mensajeError = "No existe ningun registro con ese numero de DNI";
                 modelo.addAttribute("mensaje", mensajeError);
                 return "/buscar";
             }
-            modelo.addAttribute("personas", personaServicio.TraerPersonasPorId(longDni));
+            modelo.addAttribute("personas", personaServicio.traerPersonasPorId(longDni));
             return "/index";
         }
         else{
@@ -81,7 +81,7 @@ public class PersonaControlador {
     
     @GetMapping("/sexo/{id}")
     public String mostrarFormularioDeEditar(@PathVariable Long id, Model modelo) {
-        modelo.addAttribute("persona", personaServicio.TraerPersonaPorId(id));
+        modelo.addAttribute("persona", personaServicio.traerPersonaPorId(id));
         return "/editar";
     }
 
@@ -92,7 +92,7 @@ public class PersonaControlador {
     public String actualizarEstudiante(@PathVariable Long id, @ModelAttribute("persona") Persona persona, Model modelo) {
         
         personaServicio.cambiarSexoPorId(id,persona.getSexo());
-        modelo.addAttribute("personas", personaServicio.TraerPersonasPorId(id));
+        modelo.addAttribute("personas", personaServicio.traerPersonasPorId(id));
         return "/index";
     }
 

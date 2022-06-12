@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.web.dto.Mensaje;
@@ -44,7 +43,7 @@ public class PersonaRestControlador {
     }
 
     @GetMapping("/registro/{apellidoDni}")
-    public ResponseEntity<List<Persona>> traerPersonasPorApellido(@PathVariable String apellidoDni) {
+    public ResponseEntity<Persona> traerPersonasPorApellido(@PathVariable String apellidoDni) {
 
         Mensaje mensajeError = new Mensaje("");
         Long longDni = null;
@@ -54,12 +53,16 @@ public class PersonaRestControlador {
 
         if (matcher.find()) {
             longDni = Long.parseLong(apellidoDni);
-            List<Persona> list = personaServicio.TraerPersonasPorId(longDni);
-            if (list.isEmpty()) {
+           List<Persona> l = personaServicio.traerPersonasPorId(longDni);
+            if (l.isEmpty()) {
                 mensajeError.setMensaje("No existe ningun registro con ese numero de DNI");
                 return new ResponseEntity(mensajeError, HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity(list, HttpStatus.OK);
+            Persona persona = null;
+            for(Persona p: l){
+                persona = p;
+            }
+            return new ResponseEntity(persona, HttpStatus.OK);
         } else {
             if (personaServicio.traerPorApellido(apellidoDni).isEmpty() || apellidoDni.length() < 3) {
                 return new ResponseEntity(new Mensaje("Verifica que hayas ingresado los 3 primeros caracteres o que bien que sean los correctos"), HttpStatus.BAD_REQUEST);
@@ -70,16 +73,16 @@ public class PersonaRestControlador {
     }
 
     @PutMapping("/registro/{dni}")
-    public ResponseEntity<?> actualizarSexo(@PathVariable Long dni,
-            @RequestParam String sexo) {
-        if (!personaServicio.esUnSexoContemplado(sexo)) {
+    public ResponseEntity<?> actualizarSexo(@PathVariable Long dni,@RequestBody Persona persona) {
+        
+        if (!personaServicio.esUnSexoContemplado(persona.getSexo())) {
             return new ResponseEntity(new Mensaje("Solo se admite Femenino/Masculino/Otro"), HttpStatus.BAD_REQUEST);
         }
-        if (personaServicio.TraerPersonasPorId(dni).isEmpty()) {
+        if (personaServicio.traerPersonaPorId(dni) == null) {
             return new ResponseEntity(new Mensaje("El recurso no existe"), HttpStatus.NOT_FOUND);
         }
 
-        personaServicio.cambiarSexoPorId(dni, sexo);
+        personaServicio.cambiarSexoPorId(dni, persona.getSexo());
         return new ResponseEntity(new Mensaje("El recurso se actualizo correctamente"), HttpStatus.OK);
     }
 

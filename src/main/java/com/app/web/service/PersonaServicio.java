@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface PersonaServicio {
     
-    public List<Persona> TraerPersonasPorId(Long id);
+    public List<Persona> traerPersonasPorId(Long id);
     
-    public Persona TraerPersonaPorId(Long id);
+    public Persona traerPersonaPorId(Long id);
     
     public void agregarPersona(Persona persona);
     

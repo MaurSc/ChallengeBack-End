@@ -17,12 +17,12 @@ public class PersonaServicioImpl implements PersonaServicio {
     private PersonaRepositorio personaRepo;
     
     @Override
-    public List<Persona> TraerPersonasPorId(Long id) {
+    public List<Persona> traerPersonasPorId(Long id) {
         
         return personaRepo.findByDni(id);
     }
     @Override
-    public Persona TraerPersonaPorId(Long id) {
+    public Persona traerPersonaPorId(Long id) {
         Persona p = personaRepo.getById(id);
         return p;
     }
